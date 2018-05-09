@@ -41,6 +41,10 @@ class PostPolicy < ApplicationPolicy
     @post.state != :published
   end
 
+  ability :show do
+    @post.state == :published
+  end
+
   ability :manage? do
     @post.state == :manageable
   end
@@ -61,5 +65,9 @@ end
 class CustomPostPolicy < PostPolicy
   ability :upgrade? do
     @user.role == :publisher
+  end
+
+  ability :show? do
+    @post.state == :released
   end
 end

@@ -41,6 +41,14 @@ class PostController < ApplicationController
   end
 
   render_methods
+
+  def call_able_within?
+    able?(@action, @post, within: CustomPostPolicy)
+  end
+
+  def call_authorize_within!
+    authorize!(@action, @post, within: CustomPostPolicy)
+  end
 end
 
 class UserController < ApplicationController
@@ -64,6 +72,16 @@ describe Sage::Behavior do
         PostController.new(User.new(), Post.new(:published), :edit?).call_authorize!
       end
     end
+
+    context "with within option" do
+      it do
+        expect_raises(Sage::UnauthorizedError) do
+          PostController.new(User.new, Post.new(:published), :show?).call_authorize_within!
+        end
+      end
+
+      it { PostController.new(User.new, Post.new(:released), :show?).call_authorize_within! }
+    end
   end
 
   describe "%policy" do
@@ -73,6 +91,12 @@ describe Sage::Behavior do
   describe "#able?" do
     it { PostController.new(User.new(), Post.new(), :edit?).call_able?.should be_true }
     it { PostController.new(User.new(), Post.new(:published), :edit?).call_able?.should be_false }
+
+    context "with within option" do
+      it { PostController.new(User.new, Post.new(:released), :show?).call_able?.should be_false }
+      it { PostController.new(User.new, Post.new(:released), :show?).call_able_within?.should be_true }
+      it { PostController.new(User.new, Post.new(:published), :show?).call_able_within?.should be_false }
+    end
   end
 
   describe "#unable?" do

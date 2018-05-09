@@ -69,6 +69,13 @@ able?(:update?, @post)
 unable?(:update?, @post)
 ```
 
+Also you may specify exact policy class:
+
+```crystal
+able?(:update, @post, within: EditorPostPolicy)
+authorize!(:update?, @post, within: EditorPostPolicy)
+```
+
 ### Writing Policies
 
 Policy class contains defined abilities (partially they are just a predicate methods) which are used to authorize activities.
