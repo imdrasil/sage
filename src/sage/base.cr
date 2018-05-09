@@ -30,8 +30,12 @@ module Sage
 
     def perform_pre_check; end
 
-    def check_policy(action)
+    def default_ability
       false
+    end
+
+    def check_policy(action)
+      default_ability
     end
 
     def apply(action)

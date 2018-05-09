@@ -1,6 +1,6 @@
 # Sage
 
-TODO: Write a description here
+Sage - is a lightweight library for defining resource access policy rules.
 
 ## Installation
 
@@ -192,6 +192,10 @@ end
 ```
 
 > NOTE: `alias_ability` doesn't create aliased methods and resolve them only during `Sage::Base#apply` call (which is under the hood of `able?` and `authorize!`).
+
+#### Default Ability
+
+When Sage can't resolve ability name it calls `Sage::Base#default_ability` method which by default returns `false`. You may override it to define another behavior.
 
 ### Pre-Checks
 
